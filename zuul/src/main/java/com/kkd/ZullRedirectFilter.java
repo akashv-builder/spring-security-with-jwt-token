@@ -1,4 +1,4 @@
-package com.demo;
+package com.kkd;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +15,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.netflix.zuul.ZuulFilter;
@@ -79,7 +77,6 @@ public class ZullRedirectFilter extends ZuulFilter {
                 os.write(request.getReader().toString().getBytes());
                 os.flush();
                 os.close();
-                //
                 in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             } catch (MalformedURLException e) {
                 return HttpServletResponse.SC_FORBIDDEN;

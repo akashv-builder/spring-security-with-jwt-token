@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,7 +63,6 @@ public class CustomerFarmerController {
 			return ResponseEntity.status(HttpStatus.CREATED).body(farmer);
 		}
 		return new ResponseEntity<>(HttpStatus.CONFLICT);
-
 	}
 
 	@PutMapping("/farmer/user/forgetpassword/{mobileNo}")
@@ -78,41 +78,42 @@ public class CustomerFarmerController {
 		}
 		return new ResponseEntity<>(HttpStatus.CONFLICT);
 	}
-	
-	
-	@PostMapping("/customer/user/loginn")
-	@HystrixCommand(fallbackMethod="fallbackStatus")
-	public ResponseEntity<CustomerBean> Customer(@RequestBody CustomerBean customer) {
-		Optional<CustomerBean> findByMobileNo = customerRepository.findByMobileNo(customer.getMobileNo());	
+
+	@PostMapping("/customer/user/login")
+	@HystrixCommand(fallbackMethod = "fallbackStatus")
+	public ResponseEntity<CustomerBean> loginCustomer(@RequestBody CustomerBean customer) {
+		Optional<CustomerBean> findByMobileNo = customerRepository.findByMobileNo(customer.getMobileNo());
 		if (findByMobileNo.isPresent()) {
 			CustomerBean userFound = findByMobileNo.get();
-			String password = userFound.getPassword();
-			if(password.equals(customer.getPassword())) {
-				return ResponseEntity.status(HttpStatus.FOUND).body(userFound);
+			String storedPassword = userFound.getPassword();
+			if (storedPassword.equals(customer.getPassword())) {
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(userFound);
 			}
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		return new ResponseEntity<>(HttpStatus.CONFLICT);
 	}
-	
+
 	@PostMapping("/farmer/user/login")
-	@HystrixCommand(fallbackMethod="fallbackStatus")
-	public ResponseEntity<FarmerBean> Farmer(@RequestBody FarmerBean farmer) {
+	@HystrixCommand(fallbackMethod = "fallbackStatus")
+	public ResponseEntity<FarmerBean> loginFarmer(@RequestBody FarmerBean farmer) {
 		Optional<FarmerBean> findByMobileNo = farmerDetailsRepository.findByMobileNo(farmer.getMobileNo());
-		System.out.println(findByMobileNo);
 		if (findByMobileNo.isPresent()) {
 			FarmerBean userFound = findByMobileNo.get();
-			String password = userFound.getPassword();
-			if(password.equals(farmer.getPassword())) {
-				return ResponseEntity.status(HttpStatus.FOUND).body(userFound);
+			String storedPassword = userFound.getPassword();
+			if (storedPassword.equals(farmer.getPassword())) {
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body(userFound);
 			}
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 		return new ResponseEntity<>(HttpStatus.CONFLICT);
 	}
-	
+
 	/* hystrix fallback method for default customer creation */
 	public ResponseEntity<CustomerBean> fallbackStatus(CustomerBean customer) {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
+
 	public ResponseEntity<FarmerBean> fallbackStatus(FarmerBean farmer) {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}

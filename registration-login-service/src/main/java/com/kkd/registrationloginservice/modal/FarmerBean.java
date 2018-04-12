@@ -1,16 +1,13 @@
 package com.kkd.registrationloginservice.modal;
 
-
 import java.util.ArrayList;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@Document(collection="farmer")
+@Document(collection = "farmer")
 public class FarmerBean {
-	
-	
+
 	private String kkdFarmId;
 	@Id
 	private String mobileNo;
@@ -22,7 +19,7 @@ public class FarmerBean {
 	private boolean autoConfirm;
 	private AadharBean aadharData;
 	private String role;
-	
+
 	public FarmerBean() {
 		super();
 	}
@@ -41,8 +38,6 @@ public class FarmerBean {
 		this.aadharData = aadharData;
 		this.role = role;
 	}
-
-
 
 	public String getKkdFarmId() {
 		return kkdFarmId;
@@ -130,5 +125,5 @@ public class FarmerBean {
 				+ ", alternateNo=" + alternateNo + ", cities=" + cities + ", currentAddress=" + currentAddress
 				+ ", status=" + status + ", autoConfirm=" + autoConfirm + ", aadharData=" + aadharData + ", role="
 				+ role + "]";
-	}	
+	}
 }

@@ -4,13 +4,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "tokenInformation")
-public class UaaModel {
+public class AuthenticationAuthorisationBean {
 	
 	@Id
 	private String token;//token be the Id 
 	private String publicKey;
 	
-	public UaaModel(String publicKey, String token) {
+	public AuthenticationAuthorisationBean(String publicKey, String token) {
 		super();
 		this.publicKey = publicKey;
 		this.token = token;
